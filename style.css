@@ -1,12 +1,26 @@
 html, body {
-  margin: 0;
+  margin-left: auto;
+  margin-right: auto;
   padding: 0;
-  background-color: #111;
+  background-color: #1a1a1a;
   font-family: "Courier";
   color: #FFF;
   font-size: 10pt;
+  justify-content: center;
+  display: flex;
 }
 
 canvas{
   display: block;
+}
+#content {
+  justify-content: center;
+  display: flex;
+  width: 900;
+  padding: 0;
+  background-color: #141414;
+  font-family: "Courier";
+  color: #FFF;
+  font-size: 10pt;
+  border-radius: 25px;
 }

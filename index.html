@@ -3,20 +3,36 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+	<meta name="description" content="Easily Convert your images into ascii art!">
+	<meta name="keywords" content="ascii,image,convert,opensource,letter,alphabet">
+	<meta http-equiv="X-UA-Compatible" content= "IE=edge,chrome=1">
+  <title>Ascii Image Converter</title>
   <!-- PLEASE NO CHANGES BELOW THIS LINE (UNTIL I SAY SO) -->
   <script language="javascript" type="text/javascript" src="libraries/p5.min.js"></script>
   <script language="javascript" type="text/javascript" src="AsciiThing.js"></script>
   <!-- OK, YOU CAN MAKE CHANGES BELOW THIS LINE AGAIN -->
+
   <link rel="stylesheet" href="style.css">
 
-  <style>
-
-  </style>
 
 </head>
 
 <body>
+  <div id="content">
+    <script>
+      function setup() {
+        can = createCanvas(600,600);
+        can.parent("content");
+        background(0);
+        makeButton("Switch Modes", 665, 620, 1.5, toggle);
+        makeButton("Update", 170 + 665, 620, 1.5, lulu);
+        makeInputFile();
+        makeSlider();
+        makeSlider1();
+        pickle = loadImage("img/illegal.png");
+      }
+    </script>
+  </div>
 </body>
 
 </html>

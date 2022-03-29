@@ -9,16 +9,19 @@ let res;
 let dit;
 let p;
 let p1;
+let de;
+let de1;
 
 function setup() {
-  createCanvas(600,600);
+  can = createCanvas(600,600);
+  can.parent("content");
   background(0);
-  makeButton("Switch Modes", 10, 620, 1.5, toggle);
-  makeButton("Update", 170, 620, 1.5, lulu);
+  makeButton("Switch Modes", 665, 620, 1.5, toggle);
+  makeButton("Update", 170 + 665, 620, 1.5, lulu);
   makeInputFile();
   makeSlider();
   makeSlider1();
-  pickle = loadImage("img/artex2.png");
+  pickle = loadImage("img/illegal.png");
   // image(pickle, 0, 0, width, height);
 }
 function makeButton(n, x, y, s, f) { //name , x cord, y cord, size, function
@@ -30,7 +33,7 @@ function makeButton(n, x, y, s, f) { //name , x cord, y cord, size, function
 }
 function makeInputFile() {
   input = createFileInput(handleFile);
-  input.position(10, 660);
+  input.position(665, 660);
 }
 function handleFile(file) {
   if (file.type === "image") {
@@ -41,19 +44,27 @@ function handleFile(file) {
 }
 function makeSlider() {
   slider = createSlider(8,256,res,8)
-  slider.position(10,690)
+  slider.position(665,705)
   slider.value(64)
+  slider.style("width","200px")
   p = createP(res);
-  p.position(145,677);
+  p.position(208 + 665,691);
   p.style("font-size", "16px")
+  de = createP("Resolution");
+  de.position(670,675);
+  de.style("font-size", "16px")
 }
 function makeSlider1() {
   slider1 = createSlider(8,128,dit,8)
-  slider1.position(10,720)
+  slider1.position(665,750)
   slider1.value(64)
+  slider1.style("width","200px")
   p1 = createP(dit);
-  p1.position(145,705);
+  p1.position(208 + 665,736);
   p1.style("font-size", "16px")
+  de1 = createP("Dithering");
+  de1.position(670,720);
+  de1.style("font-size", "16px")
 }
 function pixelIndex(i, j) {
   return (i + j * pickle.width) * 4;
@@ -63,26 +74,77 @@ function asciiText() {
   let w = width / pickle.width;
   let h = width / pickle.height;
   pickle.loadPixels();
-  for (let j = 0; j < pickle.height; j++) {
+  for (let j = 0; j < pickle.height - 1; j++) {
     let row = "";
-    for (let i = 0; i < pickle.width; i++) {
-      // const pixelIndex = (i + j * pickle.width) * 4;
-      var pix = pickle.pixels[pixelIndex(i,j)];
-      var r = red(pix)
-      var g = green(pix)
-      var b = blue(pix)
-      const avg = (r + g + b) / 3;
+    for (let i = 1; i < pickle.width - 1; i++) {
       const len = density.length;
-      const charIndex = floor(map(avg, 0, 255, 0, len));
+      var r = pickle.pixels[pixelIndex(i,j) + 0];
+      var g = pickle.pixels[pixelIndex(i,j) + 1];
+      var b = pickle.pixels[pixelIndex(i,j) + 2];
+      nR = round(len * r )
+      nG = round(len * g )
+      nB = round(len * b ) //* (255 / len);
+      erR = r - nR;
+      erG = g - nG;
+      erB = b - nB;
+      //quant
+      fact = dit
+        index = pixelIndex(i+1, j)
+        rr = pickle.pixels[index + 0];
+        gg = pickle.pixels[index + 1];
+        bb = pickle.pixels[index + 2];
+        rr = rr + erR * 7/fact;
+        gg = gg + erG * 7/fact;
+        bb = bb + erB * 7/fact;
+        pickle.pixels[index + 0] = rr;
+        pickle.pixels[index + 1] = gg;
+        pickle.pixels[index + 2] = bb;
+
+        index = pixelIndex(i-1, j+1)
+        rr = pickle.pixels[index + 0];
+        gg = pickle.pixels[index + 1];
+        bb = pickle.pixels[index + 2];
+        rr = rr + erR * 3/fact;
+        gg = gg + erG * 3/fact;
+        bb = bb + erB * 3/fact;
+        pickle.pixels[index + 0] = rr;
+        pickle.pixels[index + 1] = gg;
+        pickle.pixels[index + 2] = bb;
+
+        index = pixelIndex(i, j+1)
+        rr = pickle.pixels[index + 0];
+        gg = pickle.pixels[index + 1];
+        bb = pickle.pixels[index + 2];
+        rr = rr + erR * 5/fact;
+        gg = gg + erG * 5/fact;
+        bb = bb + erB * 5/fact;
+        pickle.pixels[index + 0] = rr;
+        pickle.pixels[index + 1] = gg;
+        pickle.pixels[index + 2] = bb;
+
+        index = pixelIndex(i+1, j+1)
+        rr = pickle.pixels[index + 0];
+        gg = pickle.pixels[index + 1];
+        bb = pickle.pixels[index + 2];
+        rr = rr + erR * 1/fact;
+        gg = gg + erG * 1/fact;
+        bb = bb + erB * 1/fact;
+        pickle.pixels[index + 0] = rr;
+        pickle.pixels[index + 1] = gg;
+        pickle.pixels[index + 2] = bb;
+
+      avg = (pickle.pixels[index + 0] + pickle.pixels[index + 1] + pickle.pixels[index + 2]) / 3;
+    const charIndex =  map(avg,0,255,len,0)
 
       const c = density.charAt(charIndex);
       if (c == '') row += '&nbsp;'
       else row += c;
     }
     vid = createDiv(row);
-    vid.position(30,(j * h * 0.9))
+    vid.position(715,(j * h * 0.95 + 22))
     // console.log(row)
   }
+  pickle.updatePixels();
 }
 function asciiImage() {
   pickle.resize(res,0);
@@ -162,8 +224,8 @@ function asciiImage() {
 function toggle() {
   if (swatch == true) {
     removeElements();
-    makeButton("Switch Modes", 10, 620, 1.5, toggle);
-    makeButton("Update", 170, 620, 1.5, lulu);
+    makeButton("Switch Modes", 665, 620, 1.5, toggle);
+    makeButton("Update", 170 + 665, 620, 1.5, lulu);
     makeInputFile();
     makeSlider();
     makeSlider1();
@@ -182,14 +244,13 @@ function toggle() {
 function lulu() {
   if (swatch == true) {
     removeElements();
-    makeButton("Switch Modes", 10, 620, 1.5, toggle);
-    makeButton("Update", 170, 620, 1.5, lulu);
+    makeButton("Switch Modes", 665, 620, 1.5, toggle);
+    makeButton("Update", 170 + 665, 620, 1.5, lulu);
     makeInputFile();
     makeSlider();
     makeSlider1();
     asciiText();
     pickle = loadImage(ifile); //i file? more like pedophile hahaha.. ha.
-    pickle.updatePixels();
     // console.log("help my life has lost all meaning i want to kill myself my sanity is no more.")
   }
   else if(swatch == false) {
