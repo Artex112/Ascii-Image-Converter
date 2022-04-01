@@ -5,6 +5,8 @@ let swatch = true;
 let pickle;
 let button;
 let ifile;
+let divholder;
+let row;
 let res;
 let dit;
 let p;
@@ -75,7 +77,7 @@ function asciiText() {
   let h = width / pickle.height;
   pickle.loadPixels();
   for (let j = 0; j < pickle.height - 1; j++) {
-    let row = "";
+    row = "";
     for (let i = 1; i < pickle.width - 1; i++) {
       const len = density.length;
       var r = pickle.pixels[pixelIndex(i,j) + 0];
@@ -140,8 +142,9 @@ function asciiText() {
       if (c == '') row += '&nbsp;'
       else row += c;
     }
-    vid = createDiv(row);
-    vid.position(715,(j * h * 0.95 + 22))
+    div = createDiv(row);
+    div.parent("divholder");
+    div.position(715,(j * h * 0.95 + 22))
     // console.log(row)
   }
   pickle.updatePixels();
@@ -223,12 +226,12 @@ function asciiImage() {
 }
 function toggle() {
   if (swatch == true) {
-    removeElements();
-    makeButton("Switch Modes", 665, 620, 1.5, toggle);
-    makeButton("Update", 170 + 665, 620, 1.5, lulu);
-    makeInputFile();
-    makeSlider();
-    makeSlider1();
+    if (divholder != undefined) {
+      divholder.remove();
+    }
+
+    divholder = createDiv("");
+    divholder.id("divholder")
     asciiImage();
     pickle = loadImage(ifile);
     swatch = false;
@@ -243,14 +246,13 @@ function toggle() {
 }
 function lulu() {
   if (swatch == true) {
-    removeElements();
-    makeButton("Switch Modes", 665, 620, 1.5, toggle);
-    makeButton("Update", 170 + 665, 620, 1.5, lulu);
-    makeInputFile();
-    makeSlider();
-    makeSlider1();
+    if (divholder != undefined) {
+      divholder.remove()
+    }
+    divholder = createDiv("");
+    divholder.id("divholder")
     asciiText();
-    pickle = loadImage(ifile); //i file? more like pedophile hahaha.. ha.
+    pickle = loadImage(ifile);
     // console.log("help my life has lost all meaning i want to kill myself my sanity is no more.")
   }
   else if(swatch == false) {
