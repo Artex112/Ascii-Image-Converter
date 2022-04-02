@@ -13,29 +13,40 @@ let p;
 let p1;
 let de;
 let de1;
+let sv;
+let pg;
+let copyText = "";
+let copy = true;
+const textPaste = () => copy;
 
 function setup() {
   can = createCanvas(600,600);
   can.parent("content");
+  pg = createGraphics(2048,2048)
+  sv = "Copy to Clipboard"
   background(0);
-  makeButton("Switch Modes", 665, 620, 1.5, toggle);
-  makeButton("Update", 170 + 665, 620, 1.5, lulu);
+  makeButton("Switch Modes", 165, 620, "absolute", 1.5, "20", 100, toggle, "content");
+  makeButton("Update", 335, 620, "absolute", 1.5, "20", 100, lulu, "content");
+  makeButton(sv, 385, 660, "absolute", 1, "12", 115, saveButton, "content");
   makeInputFile();
   makeSlider();
   makeSlider1();
   pickle = loadImage("img/illegal.png");
   // image(pickle, 0, 0, width, height);
 }
-function makeButton(n, x, y, s, f) { //name , x cord, y cord, size, function
+function makeButton(n, x, y, t, s, fs, wi, f, p) { //name , x cord, y cord, pos type,
+  // size, font size, function, parent
   button = createButton(n);
-  button.position(x, y);
-  button.size(100 * s,20 * s);
-  button.style("font-size", "20px");
+  button.position(x, y, t);
+  button.size(wi * s,20 * s);
+  button.style("font-size", fs);;
   button.mousePressed(f);
+  button.parent(p);
 }
 function makeInputFile() {
   input = createFileInput(handleFile);
-  input.position(665, 660);
+  input.position(165, 660);
+  input.parent("content");
 }
 function handleFile(file) {
   if (file.type === "image") {
@@ -44,29 +55,62 @@ function handleFile(file) {
     img.hide();
   }
 }
+function loadImg(){
+  if (ifile == null) {
+    pickle = loadImage("img/illegal.png")
+  }
+  else {
+  pickle = loadImage(ifile);
+  }
+}
 function makeSlider() {
   slider = createSlider(8,256,res,8)
-  slider.position(665,705)
+  slider.position(165,705)
   slider.value(64)
   slider.style("width","200px")
+  slider.parent("content");
   p = createP(res);
-  p.position(208 + 665,691);
+  p.position(208 + 165,691);
   p.style("font-size", "16px")
+  p.parent("content");
   de = createP("Resolution");
-  de.position(670,675);
+  de.position(170,675);
   de.style("font-size", "16px")
+  de.parent("content");
 }
 function makeSlider1() {
   slider1 = createSlider(8,128,dit,8)
-  slider1.position(665,750)
+  slider1.position(165,750)
   slider1.value(64)
   slider1.style("width","200px")
+  slider1.parent("content");
   p1 = createP(dit);
-  p1.position(208 + 665,736);
+  p1.position(208 + 165,736);
   p1.style("font-size", "16px")
+  p1.parent("content");
   de1 = createP("Dithering");
-  de1.position(670,720);
+  de1.position(170,720);
   de1.style("font-size", "16px")
+  de1.parent("content");
+}
+function saveButton(){
+  if (swatch == false) {
+    saveImage()
+    sv = "Save image as"
+
+  }
+  else if (swatch == true) {
+    copyClipboard()
+    sv = "Copy to Clipboard"
+  }
+}
+function copyClipboard() {
+  navigator.clipboard.writeText(copyText);
+}
+function saveImage() {
+  if (pg != undefined) {
+  pg.save("AsciiConverted.jpg")
+  }
 }
 function pixelIndex(i, j) {
   return (i + j * pickle.width) * 4;
@@ -141,7 +185,10 @@ function asciiText() {
       const c = density.charAt(charIndex);
       if (c == '') row += '&nbsp;'
       else row += c;
+      if (c == '') copyText += " "
+      copyText += c
     }
+    copyText += "\n"
     div = createDiv(row);
     div.parent("divholder");
     div.position(715,(j * h * 0.95 + 22))
@@ -215,6 +262,12 @@ function asciiImage() {
         avg = (pickle.pixels[index + 0] + pickle.pixels[index + 1] + pickle.pixels[index + 2]) / 3;
       const charIndex =  map(avg,0,255,len,0)
 
+      pg.noStroke();
+      pg.fill(255);
+      pg.textSize(pg.width/pickle.width);
+      pg.textAlign(CENTER, CENTER);
+      pg.text(density.charAt(charIndex), i * (pg.width/pickle.width) + (pg.width/pickle.width) * 0.5, j * (pg.height/pickle.height) + (pg.height/pickle.height) * 1);
+
       noStroke();
       fill(255);
       textSize(w);
@@ -232,13 +285,16 @@ function toggle() {
 
     divholder = createDiv("");
     divholder.id("divholder")
+    sv = "Save image as"
+    copyText = ""
     asciiImage();
-    pickle = loadImage(ifile);
+    loadImg();
     swatch = false;
     // console.log(swatch);
   }
   else if(swatch == false) {
     background(0)
+    sv = "Copy to Clipboard"
     asciiText();
     swatch = true;
     // console.log(swatch);
@@ -251,14 +307,19 @@ function lulu() {
     }
     divholder = createDiv("");
     divholder.id("divholder")
+    pg.clear()
+    sv = "Copy to Clipboard"
+    copyText = ""
     asciiText();
-    pickle = loadImage(ifile);
+    loadImg();
     // console.log("help my life has lost all meaning i want to kill myself my sanity is no more.")
   }
   else if(swatch == false) {
     background(0)
+    pg.clear()
+    sv = "Save image as"
     asciiImage();
-    pickle = loadImage(ifile);
+    loadImg();
   }
 }
 function draw() {
@@ -266,4 +327,5 @@ function draw() {
   dit = slider1.value()
   p.html(res)
   p1.html(dit)
+  button.html(sv)
 }

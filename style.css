@@ -23,4 +23,5 @@ canvas{
   color: #FFF;
   font-size: 10pt;
   border-radius: 25px;
+  position: relative;
 }

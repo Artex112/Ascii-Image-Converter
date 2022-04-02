@@ -9,7 +9,6 @@
   <title>Ascii Image Converter</title>
   <!-- PLEASE NO CHANGES BELOW THIS LINE (UNTIL I SAY SO) -->
   <script language="javascript" type="text/javascript" src="libraries/p5.min.js"></script>
-  <script language="javascript" type="text/javascript" src="AsciiThing.js"></script>
   <!-- OK, YOU CAN MAKE CHANGES BELOW THIS LINE AGAIN -->
 
   <link rel="stylesheet" href="style.css">
@@ -19,20 +18,7 @@
 
 <body>
   <div id="content">
-    <script>
-      function setup() {
-        can = createCanvas(600,600);
-        can.parent("content");
-        background(0);
-        makeButton("Switch Modes", 665, 620, 1.5, toggle);
-        makeButton("Update", 170 + 665, 620, 1.5, lulu);
-        makeInputFile();
-        makeSlider();
-        makeSlider1();
-        pickle = loadImage("img/illegal.png");
-      }
-    </script>
-    
+    <script language="javascript" type="text/javascript" src="AsciiThing.js"></script>
   </div>
 </body>
 
