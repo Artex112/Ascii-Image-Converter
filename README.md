@@ -12,6 +12,8 @@ This is an Ascii image converter i wrote in html and javascript,
   - Second one changes the way dithering behaves good for fine tuning the image
 
 ### Additional info
-- As i will continue to update this project, ***it will change drastically***
+~~- As i will continue to update this project, ***it will change drastically***
 the current version is what i call "working enough to be usable" this is my first ever project i decided to publish.
-I am no professional in programming or web development, if you find any issues you can pull up an issue request on the repo.
+I am no professional in programming or web development, if you find any issues you can pull up an issue request on the repo.~~
+
+- Thank you to everyone that helped me with this project, even if it was mentally. i managed to take this into state i feel satisfied with and thus **i wont be updating this as frequently.** but ***i will still keep pushing new updates if its neccesary.***
